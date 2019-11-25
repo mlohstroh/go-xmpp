@@ -591,13 +591,13 @@ type Contact struct {
 
 // Presence is an XMPP presence notification.
 type Presence struct {
-	From        string
-	To          string
-	Type        string
-	Show        string
-	Status      string
-	Jid         string
-	Role        string
+	From   string
+	To     string
+	Type   string
+	Show   string
+	Status string
+	Jid    string
+	Role   string
 }
 
 type IQ struct {
@@ -830,27 +830,27 @@ type clientText struct {
 }
 
 type clientPresence struct {
-	XMLName xml.Name `xml:"jabber:client presence"`
-	From    string   `xml:"from,attr"`
-	ID      string   `xml:"id,attr"`
-	To      string   `xml:"to,attr"`
-	Type    string   `xml:"type,attr"` // error, probe, subscribe, subscribed, unavailable, unsubscribe, unsubscribed
-	Lang    string   `xml:"lang,attr"`
-	Item    clientPresenceItem `xml:"x>item"`
-	Show    string `xml:"show"`   // away, chat, dnd, xa
-	Status   string `xml:"status"` // sb []clientText
-	Priority string `xml:"priority,attr"`
+	XMLName  xml.Name           `xml:"jabber:client presence"`
+	From     string             `xml:"from,attr"`
+	ID       string             `xml:"id,attr"`
+	To       string             `xml:"to,attr"`
+	Type     string             `xml:"type,attr"` // error, probe, subscribe, subscribed, unavailable, unsubscribe, unsubscribed
+	Lang     string             `xml:"lang,attr"`
+	Item     clientPresenceItem `xml:"x>item"`
+	Show     string             `xml:"show"`   // away, chat, dnd, xa
+	Status   string             `xml:"status"` // sb []clientText
+	Priority string             `xml:"priority,attr"`
 	Error    *clientError
 }
 
-// This is to extract something like this from the presence request. 
+// This is to extract something like this from the presence request.
 // <x xmlns="http://jabber.org/protocol/muc#user">
 // 	<item jid="jid@example.com/resource" affiliation="owner" role="moderator"/>
 // </x>
 
 type clientPresenceItem struct {
-	Jid         string `xml:"jid,attr"`
-	Role        string `xml:"role,attr"`
+	Jid  string `xml:"jid,attr"`
+	Role string `xml:"role,attr"`
 }
 
 type clientIQ struct {
