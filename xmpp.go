@@ -591,11 +591,13 @@ type Contact struct {
 
 // Presence is an XMPP presence notification.
 type Presence struct {
-	From   string
-	To     string
-	Type   string
-	Show   string
-	Status string
+	From        string
+	To          string
+	Type        string
+	Show        string
+	Status      string
+	Jid         string
+	Role        string
 }
 
 type IQ struct {
@@ -638,7 +640,7 @@ func (c *Client) Recv() (stanza interface{}, err error) {
 			}
 			return Chat{Type: "roster", Roster: r}, nil
 		case *clientPresence:
-			return Presence{v.From, v.To, v.Type, v.Show, v.Status}, nil
+			return Presence{v.From, v.To, v.Type, v.Show, v.Status, v.Item.Jid, v.Item.Role}, nil
 		case *clientIQ:
 			// TODO check more strictly
 			if bytes.Equal(bytes.TrimSpace(v.Query), []byte(`<ping xmlns='urn:xmpp:ping'/>`)) || bytes.Equal(bytes.TrimSpace(v.Query), []byte(`<ping xmlns="urn:xmpp:ping"/>`)) {
@@ -834,11 +836,21 @@ type clientPresence struct {
 	To      string   `xml:"to,attr"`
 	Type    string   `xml:"type,attr"` // error, probe, subscribe, subscribed, unavailable, unsubscribe, unsubscribed
 	Lang    string   `xml:"lang,attr"`
-
-	Show     string `xml:"show"`   // away, chat, dnd, xa
+	Item    clientPresenceItem `xml:"x>item"`
+	Show    string `xml:"show"`   // away, chat, dnd, xa
 	Status   string `xml:"status"` // sb []clientText
 	Priority string `xml:"priority,attr"`
 	Error    *clientError
+}
+
+// This is to extract something like this from the presence request. 
+// <x xmlns="http://jabber.org/protocol/muc#user">
+// 	<item jid="jid@example.com/resource" affiliation="owner" role="moderator"/>
+// </x>
+
+type clientPresenceItem struct {
+	Jid         string `xml:"jid,attr"`
+	Role        string `xml:"role,attr"`
 }
 
 type clientIQ struct {
